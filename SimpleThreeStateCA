@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import javax.swing.*;
 
@@ -25,6 +24,33 @@ public class SimpleThreeStateCA {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 state[i][j] = j == N - 1 ? 2 : 0;
+            }
+        }
+
+        // Define initial state - excited center region / resting elsewhere.
+        int centerRow = N / 2;
+        int centerCol = N / 2;
+        int centerSize = N / 4;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i >= centerRow - centerSize && i <= centerRow + centerSize &&
+                    j >= centerCol - centerSize && j <= centerCol + centerSize) {
+                    state[i][j] = 2;
+                } else {
+                    state[i][j] = 0;
+                }
+            }
+        }
+
+        // Define initial state - top right / resting elsewhere.
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i == N - 1 && j == 0) {
+                    state[i][j] = 2;
+                    2
+                } else {
+                    state[i][j] = 0;
+                }
             }
         }
 
@@ -58,11 +84,10 @@ public class SimpleThreeStateCA {
                     int jp = Math.min(j + 1, N - 1);
                     int jm = Math.max(j - 1, 0);
 
-                    excitedNeighbour[i][j]
-                            = state[i][jp] == 2
-                            || state[i][jm] == 2
-                            || state[ip][j] == 2
-                            || state[im][j] == 2;
+                    excitedNeighbour[i][j] = state[i][jp] == 2 ||
+                        state[i][jm] == 2 ||
+                        state[ip][j] == 2 ||
+                        state[im][j] == 2;
                 }
             }
 
@@ -117,7 +142,7 @@ public class SimpleThreeStateCA {
                             g.setColor(Color.GRAY);
                         }
                         g.fillRect(CELL_SIZE * i, CELL_SIZE * j,
-                                CELL_SIZE, CELL_SIZE);
+                            CELL_SIZE, CELL_SIZE);
                     }
                 }
             }
