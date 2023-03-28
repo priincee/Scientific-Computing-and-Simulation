@@ -2,9 +2,9 @@ import java.awt.*;
 import javax.swing.*;
 
 public class FourStateCA {
-    final static int N = 200;
-    final static int cellSize = 5;
-    final static int delay = 100;
+    final static int N = 100;
+    final static int cellSize = 2;
+    final static int delay = 50;
     static int[][] state = new int[N][N];
     static boolean[][] excitedNeighbour = new boolean[N][N];
     static int[][] timeToStateChange = new int[N][N];
@@ -37,6 +37,7 @@ public class FourStateCA {
             }
         }*/
 
+
         display.repaint();
         pause();
 
@@ -64,14 +65,10 @@ public class FourStateCA {
                     int jp = Math.min(j + 1, N - 1);
                     int jm = Math.max(j - 1, 0);
 
-                    excitedNeighbour[i][j] = state[i][jp] == waveFront ||
-                            state[i][jm] == waveFront ||
-                            state[ip][j] == waveFront ||
-                            state[im][j] == waveFront ||
-                            state[i][jp] == plateau ||
-                            state[i][jm] == plateau ||
-                            state[ip][j] == plateau ||
-                            state[im][j] == plateau;
+                    excitedNeighbour[i][j] =
+                            state[im][jm] >= waveFront || state[i ][jm] >= waveFront || state[ip][jm] >= waveFront ||
+                            state[im][j ] >= waveFront ||                               state[ip][j ] >= waveFront ||
+                            state[im][jp] >= waveFront || state[i ][jp] >= waveFront || state[ip][jp] >= waveFront;
                 }
             }
 
@@ -116,3 +113,51 @@ public class FourStateCA {
             pause();
         }
     }
+
+
+
+    static class Display extends JPanel {
+
+        final static int WINDOW_SIZE = N * cellSize;
+
+        Display() {
+
+            setPreferredSize(new Dimension(WINDOW_SIZE, WINDOW_SIZE));
+
+            JFrame frame = new JFrame("Excitable media model");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setContentPane(this);
+            frame.pack();
+            frame.setVisible(true);
+        }
+
+        public void paintComponent(Graphics g) {
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, WINDOW_SIZE, WINDOW_SIZE);
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) {
+                    if (state[i][j] > 0) {
+                        if (state[i][j] == 2) {
+                            g.setColor(Color.BLACK);
+                        } else if (state[i][j] == 3) {
+                            g.setColor(Color.GRAY);
+                        } else {
+                            g.setColor(Color.BLUE);
+                        }
+                        g.fillRect(cellSize * i, cellSize * j,
+                                cellSize, cellSize);
+                    }
+                }
+            }
+        }
+    }
+
+    static void pause() {
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+}
